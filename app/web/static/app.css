@@ -1,0 +1,234 @@
+/* Цвета берутся из темы Telegram: telegram-web-app.js выставляет переменные --tg-theme-*.
+   Запасные значения — для предпросмотра в обычном браузере. */
+:root {
+  --bg: var(--tg-theme-secondary-bg-color, #f2f2f7);
+  --surface: var(--tg-theme-section-bg-color, var(--tg-theme-bg-color, #ffffff));
+  --text: var(--tg-theme-text-color, #141414);
+  --hint: var(--tg-theme-hint-color, #8e8e93);
+  --accent: var(--tg-theme-button-color, #b5652b);
+  --accent-text: var(--tg-theme-button-text-color, #ffffff);
+  --link: var(--tg-theme-link-color, #b5652b);
+  --danger: var(--tg-theme-destructive-text-color, #e5484d);
+  --separator: color-mix(in srgb, var(--hint) 22%, transparent);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 16px rgb(0 0 0 / 0.04);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: var(--tg-theme-secondary-bg-color, #101012);
+    --surface: var(--tg-theme-section-bg-color, var(--tg-theme-bg-color, #1c1c1f));
+    --text: var(--tg-theme-text-color, #f2f2f2);
+    --hint: var(--tg-theme-hint-color, #8d8d93);
+    --accent: var(--tg-theme-button-color, #d98a4e);
+    --link: var(--tg-theme-link-color, #e3a06c);
+    --shadow: none;
+  }
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body { min-height: 100vh; }
+
+#app { max-width: 720px; margin: 0 auto; padding: 0 16px calc(96px + var(--safe-bottom)); }
+
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; padding: 0; }
+.hidden { display: none !important; }
+
+h1 { font-size: 24px; line-height: 1.2; margin: 8px 0 16px; letter-spacing: -0.01em; }
+
+/* ---------- Шапка ---------- */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0 10px;
+}
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.brand-logo {
+  width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; font-size: 24px;
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+}
+.brand-name { font-weight: 700; font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand-sub { color: var(--hint); font-size: 13px; }
+.icon-btn {
+  width: 44px; height: 44px; border-radius: 50%; font-size: 20px;
+  background: var(--surface); box-shadow: var(--shadow);
+}
+
+.preview-banner {
+  margin: 4px 0 12px; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface)); color: var(--text);
+}
+
+/* ---------- Поиск и категории ---------- */
+.search {
+  display: flex; align-items: center; gap: 8px; padding: 0 14px; height: 44px; margin-bottom: 12px;
+  background: var(--surface); border-radius: 12px; box-shadow: var(--shadow); color: var(--hint);
+}
+.search input { flex: 1; border: 0; outline: 0; background: transparent; color: var(--text); height: 100%; min-width: 0; }
+.search input::placeholder { color: var(--hint); }
+
+.chips {
+  display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px 14px; padding: 0 16px 2px;
+  scrollbar-width: none;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none; height: 36px; padding: 0 14px; border-radius: 18px; white-space: nowrap; font-weight: 500;
+  background: var(--surface); box-shadow: var(--shadow); transition: background .15s, color .15s;
+}
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-text); }
+
+/* ---------- Сетка товаров ---------- */
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (min-width: 560px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.product {
+  display: flex; flex-direction: column; background: var(--surface); border-radius: var(--radius);
+  overflow: hidden; box-shadow: var(--shadow); text-align: left;
+  animation: appear .25s ease both;
+}
+.product.sold-out .thumb { filter: grayscale(1); opacity: .55; }
+
+.thumb {
+  position: relative; aspect-ratio: 1; display: grid; place-items: center; font-size: 56px;
+  background: linear-gradient(135deg, hsl(var(--hue) 60% 88%), hsl(calc(var(--hue) + 30) 55% 78%));
+}
+@media (prefers-color-scheme: dark) {
+  .thumb { background: linear-gradient(135deg, hsl(var(--hue) 30% 26%), hsl(calc(var(--hue) + 30) 30% 18%)); }
+}
+.thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.badge {
+  position: absolute; left: 8px; top: 8px; padding: 3px 8px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  background: rgb(0 0 0 / .55); color: #fff; backdrop-filter: blur(6px);
+}
+
+.product-body { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px 12px; flex: 1; }
+.product-title {
+  font-weight: 600; font-size: 14px; line-height: 1.3; min-height: 2.6em;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.product-price { font-weight: 700; font-size: 16px; margin-top: auto; }
+
+.product .btn-add, .product .stepper { width: 100%; }
+.btn-add {
+  height: 36px; border-radius: 12px; font-weight: 600;
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface)); color: var(--link);
+}
+.btn-add:disabled { color: var(--hint); background: var(--bg); cursor: default; }
+
+.stepper {
+  display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; height: 36px;
+  border-radius: 12px; background: var(--accent); color: var(--accent-text); font-weight: 700; text-align: center;
+}
+.stepper button { height: 100%; font-size: 20px; color: inherit; }
+
+.empty { text-align: center; color: var(--hint); padding: 40px 0; }
+
+/* Скелетоны, пока грузится каталог */
+.skeleton .thumb, .skeleton .line {
+  background: linear-gradient(90deg, var(--bg) 0%, var(--surface) 50%, var(--bg) 100%);
+  background-size: 200% 100%; animation: shimmer 1.2s infinite linear;
+}
+.skeleton .line { height: 14px; border-radius: 6px; }
+
+/* ---------- Корзина и оформление ---------- */
+.card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); }
+.list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+
+.cart-row { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; padding: 10px; }
+.cart-row .thumb { width: 56px; border-radius: 12px; font-size: 28px; }
+.cart-row .title { font-weight: 600; font-size: 14px; }
+.cart-row .meta { color: var(--hint); font-size: 13px; }
+.cart-row .stepper { width: 108px; }
+
+.summary { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.summary .row { display: flex; justify-content: space-between; gap: 12px; }
+.summary .row span:first-child { color: var(--hint); }
+.summary .total { font-weight: 700; font-size: 17px; padding-top: 8px; border-top: 1px solid var(--separator); }
+.summary .total span:first-child { color: var(--text); }
+.free-hint { font-size: 13px; color: var(--link); }
+.progress { height: 6px; border-radius: 3px; background: var(--bg); overflow: hidden; }
+.progress > div { height: 100%; background: var(--accent); border-radius: 3px; transition: width .3s ease; }
+
+.segmented {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin-bottom: 14px;
+  background: var(--surface); border-radius: 12px; box-shadow: var(--shadow);
+}
+.segmented input { position: absolute; opacity: 0; pointer-events: none; }
+.segmented span { display: block; text-align: center; padding: 9px 0; border-radius: 9px; font-weight: 600; cursor: pointer; }
+.segmented input:checked + span { background: var(--accent); color: var(--accent-text); }
+
+.form-card { padding: 4px 16px; margin-bottom: 14px; }
+.field { display: block; padding: 10px 0; border-bottom: 1px solid var(--separator); }
+.field:last-child { border-bottom: 0; }
+.field span { display: block; font-size: 12px; color: var(--hint); margin-bottom: 2px; }
+.field input, .field textarea { width: 100%; border: 0; outline: 0; background: transparent; padding: 2px 0; resize: none; }
+.field.invalid span { color: var(--danger); }
+.pickup-hint { margin: 0; padding: 10px 0; color: var(--hint); font-size: 14px; border-bottom: 1px solid var(--separator); }
+.form-error { color: var(--danger); text-align: center; margin: 14px 0; }
+
+/* ---------- Успех и заказы ---------- */
+.success { text-align: center; padding: 48px 12px; }
+.success-icon { font-size: 72px; animation: pop .5s cubic-bezier(.2, 1.6, .4, 1) both; }
+.success p { color: var(--hint); }
+
+.order-card { padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.order-card .head { display: flex; justify-content: space-between; font-weight: 600; }
+.order-card .meta { color: var(--hint); font-size: 13px; }
+
+/* ---------- Карточка товара (шторка) ---------- */
+.sheet-backdrop { position: fixed; inset: 0; background: rgb(0 0 0 / .4); z-index: 10; animation: fade .2s ease both; }
+.sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 11; max-height: 88vh; overflow-y: auto;
+  max-width: 720px; margin: 0 auto; background: var(--surface); border-radius: 20px 20px 0 0;
+  padding: 0 0 calc(20px + var(--safe-bottom)); animation: slide-up .25s cubic-bezier(.2, .8, .3, 1) both;
+}
+.sheet .thumb { aspect-ratio: 4 / 3; font-size: 96px; }
+.sheet-body { padding: 16px 20px 0; display: flex; flex-direction: column; gap: 10px; }
+.sheet-title { font-size: 20px; font-weight: 700; margin: 0; }
+.sheet-desc { color: var(--hint); margin: 0; white-space: pre-line; }
+.sheet-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 6px; }
+.sheet-price { font-size: 22px; font-weight: 700; }
+.sheet-stock { color: var(--hint); font-size: 13px; }
+.sheet .btn-add, .sheet .stepper { min-width: 150px; height: 44px; }
+.sheet-close {
+  position: absolute; right: 12px; top: 12px; width: 32px; height: 32px; border-radius: 50%; z-index: 1;
+  background: rgb(0 0 0 / .45); color: #fff; font-size: 16px;
+}
+
+/* ---------- Запасные кнопки и тосты ---------- */
+.fallback-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; display: flex; gap: 8px;
+  padding: 10px 16px calc(10px + var(--safe-bottom)); background: var(--surface); border-top: 1px solid var(--separator);
+}
+.btn-primary, .btn-secondary { height: 48px; border-radius: 12px; font-weight: 600; padding: 0 16px; }
+.btn-primary { flex: 1; background: var(--accent); color: var(--accent-text); }
+.btn-primary:disabled { opacity: .6; }
+.btn-secondary { background: var(--bg); }
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(84px + var(--safe-bottom)); transform: translateX(-50%); z-index: 20;
+  max-width: calc(100% - 32px); padding: 10px 16px; border-radius: 12px; font-size: 14px;
+  background: rgb(20 20 20 / .88); color: #fff; animation: fade .2s ease both;
+}
+
+@keyframes appear { from { opacity: 0; transform: translateY(6px); } }
+@keyframes fade { from { opacity: 0; } }
+@keyframes slide-up { from { transform: translateY(100%); } }
+@keyframes pop { from { transform: scale(.3); opacity: 0; } }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

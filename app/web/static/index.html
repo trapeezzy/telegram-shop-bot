@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>Магазин</title>
+  <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
+  <link rel="stylesheet" href="app.css?v=2">
+</head>
+<body>
+  <main id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-logo" aria-hidden="true">☕</span>
+        <div>
+          <div class="brand-name" id="shop-name">Магазин</div>
+          <div class="brand-sub" id="shop-sub">Загружаем каталог…</div>
+        </div>
+      </div>
+      <button class="icon-btn" id="orders-btn" type="button" aria-label="Мои заказы">📦</button>
+    </header>
+
+    <section class="screen" id="screen-catalog">
+      <div class="preview-banner hidden" id="preview-banner">
+        Режим предпросмотра. Чтобы оформить заказ, откройте магазин в Telegram.
+      </div>
+      <label class="search">
+        <span aria-hidden="true">🔍</span>
+        <input id="search" type="search" placeholder="Поиск кофе и аксессуаров" autocomplete="off" enterkeyhint="search">
+      </label>
+      <nav class="chips" id="chips" aria-label="Категории"></nav>
+      <div class="grid" id="grid"></div>
+      <p class="empty hidden" id="grid-empty">Ничего не нашлось 🤷</p>
+    </section>
+
+    <section class="screen hidden" id="screen-cart">
+      <h1>Корзина</h1>
+      <div class="list" id="cart-list"></div>
+      <div class="card summary" id="cart-summary"></div>
+    </section>
+
+    <section class="screen hidden" id="screen-checkout">
+      <h1>Оформление</h1>
+      <form id="checkout-form" novalidate autocomplete="on">
+        <div class="segmented" role="radiogroup" aria-label="Способ получения">
+          <label><input type="radio" name="delivery" value="courier" checked><span>🚚 Курьер</span></label>
+          <label><input type="radio" name="delivery" value="pickup"><span>🏪 Самовывоз</span></label>
+        </div>
+        <div class="card form-card">
+          <label class="field"><span>Имя получателя</span>
+            <input name="name" required maxlength="100" autocomplete="name" placeholder="Как к вам обращаться">
+          </label>
+          <label class="field"><span>Телефон</span>
+            <input name="phone" type="tel" required maxlength="32" autocomplete="tel" placeholder="+7 900 123-45-67">
+          </label>
+          <label class="field" id="address-field"><span>Адрес доставки</span>
+            <textarea name="address" rows="2" maxlength="255" autocomplete="street-address" placeholder="Улица, дом, квартира"></textarea>
+          </label>
+          <p class="pickup-hint hidden" id="pickup-hint"></p>
+          <label class="field"><span>Комментарий</span>
+            <textarea name="comment" rows="2" maxlength="500" placeholder="Код домофона, удобное время…"></textarea>
+          </label>
+        </div>
+      </form>
+      <div class="card summary" id="checkout-summary"></div>
+      <p class="form-error hidden" id="checkout-error" role="alert"></p>
+    </section>
+
+    <section class="screen hidden" id="screen-success">
+      <div class="success">
+        <div class="success-icon">🎉</div>
+        <h1 id="success-title">Заказ оплачен!</h1>
+        <p>Чек и детали заказа — в чате с ботом. Напишем, когда заказ будет в пути.</p>
+      </div>
+    </section>
+
+    <section class="screen hidden" id="screen-orders">
+      <h1>Мои заказы</h1>
+      <div class="list" id="orders-list"></div>
+    </section>
+  </main>
+
+  <div class="sheet-backdrop hidden" id="sheet-backdrop"></div>
+  <article class="sheet hidden" id="sheet" role="dialog" aria-modal="true"></article>
+
+  <!-- Вне Telegram (предпросмотр в браузере) нет нативных кнопок — показываем свои -->
+  <div class="fallback-bar hidden" id="fallback-bar">
+    <button class="btn-secondary hidden" id="fallback-back" type="button">← Назад</button>
+    <button class="btn-primary hidden" id="fallback-main" type="button"></button>
+  </div>
+  <div class="toast hidden" id="toast" role="status"></div>
+
+  <script src="app.js?v=2"></script>
+</body>
+</html>
